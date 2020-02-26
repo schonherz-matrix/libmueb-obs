@@ -1,0 +1,3 @@
+[submodule "extern/obs-studio"]
+	path = extern/obs-studio
+	url = https://github.com/obsproject/obs-studio.git
