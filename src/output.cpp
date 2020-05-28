@@ -1,24 +1,8 @@
 #include <obs.h>
+
 #include "muebtransmitter.h"
 
-void *create(obs_data_t *, obs_output_t *);
-void destroy(void *);
-bool start(void *);
-void stop(void *, uint64_t);
-void raw_video(void *, struct video_data *);
-const char *get_name(void *);
-
 extern struct obs_output_info outputInfo;
-
-struct obs_output_info outputInfo = {
-    .id = "matrix-obs-output",
-    .flags = OBS_OUTPUT_VIDEO | OBS_OUTPUT_CAN_PAUSE,
-    .get_name = get_name,
-    .create = create,
-    .destroy = destroy,
-    .start = start,
-    .stop = stop,
-    .raw_video = raw_video};
 
 struct outputData {
   obs_output_t *output;
@@ -132,3 +116,13 @@ void destroy(void *param) {
 
   bfree(data);
 }
+
+struct obs_output_info outputInfo = {
+    .id = "matrix-obs-output",
+    .flags = OBS_OUTPUT_VIDEO | OBS_OUTPUT_CAN_PAUSE,
+    .get_name = get_name,
+    .create = create,
+    .destroy = destroy,
+    .start = start,
+    .stop = stop,
+    .raw_video = raw_video};
