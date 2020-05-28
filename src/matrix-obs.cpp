@@ -12,7 +12,6 @@ bool obs_module_load(void) {
 
   auto output = obs_output_create("matrix-obs-output", "matrix-obs-output",
                                   nullptr, nullptr);
-  obs_output_start(output);
 
   return true;
 }
