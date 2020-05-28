@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.16)
 
 project(
   libmatrix-obs
@@ -25,7 +25,8 @@ find_package(libobs REQUIRED)
 find_package(libmueb 2.0 REQUIRED)
 
 # libmueb_global.h needs this to work
-add_compile_definitions(DLL_CONFIG)
+add_compile_definitions(LIBMUEB_AS_DLL)
 
-add_library(matrix-obs SHARED src/matrix-obs.cpp  src/output.cpp)
-target_link_libraries(matrix-obs Qt5::Core Qt5::Gui libobs libmueb::muebtransmitter)
+add_library(matrix-obs SHARED src/matrix-obs.cpp src/output.cpp)
+target_link_libraries(matrix-obs Qt5::Core Qt5::Gui libobs
+                      libmueb::muebtransmitter)
