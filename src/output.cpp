@@ -112,6 +112,8 @@ void destroy(void *param) {
 
   if (obs_output_active(data->output)) stop(param, 0);
 
+  obs_output_release(data->output);
+
   delete data->transmitter;
 
   bfree(data);
