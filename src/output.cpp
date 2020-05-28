@@ -98,8 +98,6 @@ void stop(void *param, uint64_t ts) {
 void raw_video(void *param, struct video_data *frame) {
   auto data = static_cast<outputData *>(param);
 
-  if (!obs_output_active(data->output)) return;
-
   // RGBA AV plane is 0
   data->transmitter->sendFrame(
       QImage(frame->data[0], obs_output_get_width(data->output),
