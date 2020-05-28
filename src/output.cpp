@@ -67,8 +67,8 @@ void *create(obs_data_t *settings, obs_output_t *output) {
 
   obs_video_info video_info;
   obs_get_video_info(&video_info);
-  video_info.base_width = 320;
-  video_info.base_height = 240;
+  video_info.base_width = video_info.output_width = libmueb::defaults::width;
+  video_info.base_height = video_info.output_height = libmueb::defaults::height;
 
   obs_reset_video(&video_info);
 
