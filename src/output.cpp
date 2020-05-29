@@ -2,7 +2,7 @@
 
 #include "muebtransmitter.h"
 
-extern struct obs_output_info outputInfo;
+extern obs_output_info outputInfo;
 
 struct outputData {
   obs_output_t *output;
@@ -73,6 +73,17 @@ void *create(obs_data_t *settings, obs_output_t *output) {
   obs_reset_video(&video_info);
 
   return data;
+}
+
+obs_output_t *create_output() {
+  obs_register_output(&outputInfo);
+
+  auto output = obs_output_create("matrix-obs-output", "matrix-obs-output",
+                                  nullptr, nullptr);
+
+  if (!output) return nullptr;
+
+  return output;
 }
 
 bool start(void *param) {

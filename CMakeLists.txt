@@ -27,6 +27,6 @@ find_package(libmueb 2.0 REQUIRED)
 # libmueb_global.h needs this to work
 add_compile_definitions(LIBMUEB_AS_DLL)
 
-add_library(matrix-obs SHARED src/matrix-obs.cpp src/output.cpp)
+add_library(matrix-obs SHARED src/matrix-obs.cpp src/output.cpp src/output.h)
 target_link_libraries(matrix-obs Qt5::Core Qt5::Gui libobs
                       libmueb::muebtransmitter)
