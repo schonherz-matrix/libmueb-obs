@@ -1,8 +1,28 @@
 #include <obs.h>
+#include <util/platform.h>
 
 #include "muebtransmitter.h"
 
 extern obs_output_info outputInfo;
+
+#define OUTPUT_DATA_PATH \
+  OBS_INSTALL_DATA_PATH "/" OBS_PLUGIN_DESTINATION "/matrix-obs"
+#define OUTPUT_FILE_PATH OUTPUT_DATA_PATH "/output_hotkeys.json"
+
+static auto hotkeyDataJson = R"(
+{
+    "matrix-obs-output.start": [
+        {
+            "key": "OBS_KEY_F3"
+        }
+    ],
+    "matrix-obs-output.stop": [
+        {
+            "key": "OBS_KEY_F4"
+        }
+    ]
+}
+)";
 
 struct outputData {
   obs_output_t *output;
@@ -78,8 +98,20 @@ void *create(obs_data_t *settings, obs_output_t *output) {
 obs_output_t *create_output() {
   obs_register_output(&outputInfo);
 
+  // Load output hotkey data
+  obs_data_t *hotkeyData;
+
+  if (os_file_exists(OUTPUT_FILE_PATH)) {
+    hotkeyData = obs_data_create_from_json_file(OUTPUT_FILE_PATH);
+  } else {  // Load default values
+    hotkeyData = obs_data_create_from_json(hotkeyDataJson);
+    os_mkdirs(OUTPUT_DATA_PATH);
+    obs_data_save_json(hotkeyData, OUTPUT_FILE_PATH);
+  }
+
   auto output = obs_output_create("matrix-obs-output", "matrix-obs-output",
-                                  nullptr, nullptr);
+                                  nullptr, hotkeyData);
+  obs_data_release(hotkeyData);
 
   if (!output) return nullptr;
 
