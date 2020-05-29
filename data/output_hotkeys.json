@@ -1,0 +1,12 @@
+{
+    "matrix-obs-output.start": [
+        {
+            "key": "OBS_KEY_F3"
+        }
+    ],
+    "matrix-obs-output.stop": [
+        {
+            "key": "OBS_KEY_F4"
+        }
+    ]
+}
