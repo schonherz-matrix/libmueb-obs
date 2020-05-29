@@ -107,10 +107,9 @@ void raw_video(void *param, struct video_data *frame) {
 
 void destroy(void *param) {
   auto data = static_cast<outputData *>(param);
+  auto output = data->output;
 
-  if (obs_output_active(data->output)) stop(param, 0);
-
-  obs_output_release(data->output);
+  obs_output_release(output);
 
   delete data->transmitter;
 
