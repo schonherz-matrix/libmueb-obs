@@ -15,11 +15,9 @@ Build tools for Qt(platform dependent):
 - **MSVC**(Desktop development with C++)/MinGW on **Windows**
 - **build-essential** on **Unix/Linux**
 
-Old Qt5Network(**5.10.1**) module for official OBS builds:
+Official OBS builds with Qt version **5.10.1** is not supported!
 
-- [Windows](http://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt5_5101/qt.qt5.5101.win64_msvc2017_64/5.10.1-0-201802092252qtbase-Windows-Windows_10-MSVC2017-Windows-Windows_10-X86_64.7z)
-- [Linux](http://download.qt.io/online/qtsdkrepository/linux_x64/desktop/qt5_5101/qt.qt5.5101.gcc_64/5.10.1-0-201802092252qtbase-Linux-RHEL_7_4-GCC-Linux-RHEL_7_4-X86_64.7z)
-- [MacOS](http://download.qt.io/online/qtsdkrepository/mac_x64/desktop/qt5_5101/qt.qt5.5101.clang_64/5.10.1-0-201802092250qtbase-MacOS-MacOS_10_12-Clang-MacOS-MacOS_10_12-X86_64.7z)
+- You should build your own OBS with Qt **5.12**(LTS) or above
 
 OBS Studio dev files
 
@@ -44,3 +42,29 @@ mkdir build && cd build
 cmake .. -DQt5_DIR=PATH -Dlibmueb_DIR=PATH -Dlibobs_DIR=PATH
 make
 ```
+
+## How to install
+
+Put these shared libraries inside obs-plugins/64bit directory
+
+- matrix-obs
+- muebtransmitter
+- Qt5Network
+
+## Issues
+
+When starting the output with the hotkey OBS might crash unexpectedly
+
+When closing OBS it will print this to the debugger
+
+```
+Freeing OBS context data
+output 'matrix-obs-output' destroyed
+	1 output(s) were remaining
+...
+Number of memory leaks: 1
+```
+
+There is no **memory leak** because matrix-obs-output is automatically destroyed and currently there is no way to call [obs_output_release](https://obsproject.com/docs/reference-outputs.html?highlight=obs_output_release#c.obs_output_release) function safely.
+
+Output is destroyed before module unload so can't do it from there.
