@@ -24,9 +24,10 @@ static auto hotkeyDataJson = R"(
 }
 )";
 
+static MuebTransmitter &transmitter{MuebTransmitter::getInstance()};
+
 struct outputData {
   obs_output_t *output;
-  MuebTransmitter *transmitter;
 
   obs_hotkey_id stop_hotkey;
   obs_hotkey_id start_hotkey;
@@ -65,7 +66,6 @@ void *create(obs_data_t *settings, obs_output_t *output) {
   auto data = static_cast<outputData *>(bzalloc(sizeof(outputData)));
 
   data->output = output;
-  data->transmitter = new MuebTransmitter;
 
   data->start_hotkey =
       obs_hotkey_register_output(output, "matrix-obs-output.start",
@@ -142,10 +142,10 @@ void raw_video(void *param, struct video_data *frame) {
   auto data = static_cast<outputData *>(param);
 
   // RGBA AV plane is 0
-  data->transmitter->sendFrame(
-      QImage(frame->data[0], obs_output_get_width(data->output),
-             obs_output_get_height(data->output), frame->linesize[0],
-             QImage::Format_RGBA8888));
+  transmitter.sendFrame(QImage(frame->data[0],
+                               obs_output_get_width(data->output),
+                               obs_output_get_height(data->output),
+                               frame->linesize[0], QImage::Format_RGBA8888));
 }
 
 void destroy(void *param) {
@@ -153,8 +153,6 @@ void destroy(void *param) {
   auto output = data->output;
 
   obs_output_release(output);
-
-  delete data->transmitter;
 
   bfree(data);
 }
