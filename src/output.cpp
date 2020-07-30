@@ -150,9 +150,6 @@ void raw_video(void *param, struct video_data *frame) {
 
 void destroy(void *param) {
   auto data = static_cast<outputData *>(param);
-  auto output = data->output;
-
-  obs_output_release(output);
 
   bfree(data);
 }
