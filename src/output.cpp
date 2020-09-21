@@ -74,21 +74,22 @@ void *create(obs_data_t *settings, obs_output_t *output) {
       obs_hotkey_register_output(output, "matrix-obs-output.stop",
                                  "Stop Mátrix output", stop_hotkey, data);
 
-  video_scale_info scale_info = {
-      .format = VIDEO_FORMAT_RGBA,
-      .width = static_cast<uint32_t>(libmueb::defaults::width),
-      .height = static_cast<uint32_t>(libmueb::defaults::height),
-      .range = VIDEO_RANGE_DEFAULT,
-      .colorspace = VIDEO_CS_DEFAULT};
+  video_scale_info scale_info = {.format = VIDEO_FORMAT_RGBA,
+                                 .width = libmueb::defaults::width * 10,
+                                 .height = libmueb::defaults::height * 10,
+                                 .range = VIDEO_RANGE_DEFAULT,
+                                 .colorspace = VIDEO_CS_DEFAULT};
 
   obs_output_set_video_conversion(data->output, &scale_info);
-  obs_output_set_preferred_size(data->output, libmueb::defaults::width,
-                                libmueb::defaults::height);
+  // Disable OBS scaling
+  obs_output_set_preferred_size(data->output, 0, 0);
 
   obs_video_info video_info;
   obs_get_video_info(&video_info);
-  video_info.base_width = video_info.output_width = libmueb::defaults::width;
-  video_info.base_height = video_info.output_height = libmueb::defaults::height;
+  video_info.base_width = video_info.output_width =
+      libmueb::defaults::width * 10;
+  video_info.base_height = video_info.output_height =
+      libmueb::defaults::height * 10;
 
   obs_reset_video(&video_info);
 
@@ -142,10 +143,12 @@ void raw_video(void *param, struct video_data *frame) {
   auto data = static_cast<outputData *>(param);
 
   // RGBA AV plane is 0
-  transmitter.sendFrame(QImage(frame->data[0],
-                               obs_output_get_width(data->output),
-                               obs_output_get_height(data->output),
-                               frame->linesize[0], QImage::Format_RGBA8888));
+  QImage f(frame->data[0], obs_output_get_width(data->output),
+           obs_output_get_height(data->output), frame->linesize[0],
+           QImage::Format_RGBA8888);
+  transmitter.sendFrame(f.scaled(libmueb::defaults::width,
+                                 libmueb::defaults::height,
+                                 Qt::KeepAspectRatio));
 }
 
 void destroy(void *param) {
