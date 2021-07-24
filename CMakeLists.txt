@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 
 project(
-  libmatrix-obs
+  libmueb-obs
   VERSION 1.0
   DESCRIPTION "OBS Studio plugin for Schönherz Mátrix streaming"
   HOMEPAGE_URL "kszk.bme.hu"
